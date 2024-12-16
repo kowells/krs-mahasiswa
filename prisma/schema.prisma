@@ -13,41 +13,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id       Int       @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   name     String
-  email    String    @unique
+  email    String @unique
   password String
-  role     Role      @default(USER)
-
-  mahasiswa Mahasiswa? @relation("UserToMahasiswa")
+  role     Role   @default(ADMIN) // Default role adalah ADMIN
 }
 
 model Mahasiswa {
-  id       Int       @id @default(autoincrement())
-  nim      String    @unique
-  userId   Int       @unique
-  user     User      @relation("UserToMahasiswa", fields: [userId], references: [id])
+  id       Int    @id @default(autoincrement())
+  nim      Int    @unique
+  nama     String
+  prodi    String
+  email    String @unique
+  password String // Login mahasiswa untuk memilih mata kuliah
 
-  krs      Krs[]
+  krs Krs[]
 }
 
 model MataKuliah {
-  id       Int       @id @default(autoincrement())
-  kode     String    @unique
-  nama     String
-  sks      Int
-  krs      Krs[]
+  id   Int    @id @default(autoincrement())
+  kode String @unique
+  nama String
+  sks  Int
+  krs  Krs[]
 }
 
 model Krs {
-  id          Int         @id @default(autoincrement())
+  id          Int @id @default(autoincrement())
   mahasiswaId Int
   matkulId    Int
 
-  mahasiswa   Mahasiswa   @relation(fields: [mahasiswaId], references: [id])
-  matkul      MataKuliah  @relation(fields: [matkulId], references: [id])
+  mahasiswa Mahasiswa  @relation(fields: [mahasiswaId], references: [id])
+  matkul    MataKuliah @relation(fields: [matkulId], references: [id])
 }
 
 enum Role {
